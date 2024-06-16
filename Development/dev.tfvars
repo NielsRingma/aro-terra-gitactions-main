@@ -3,7 +3,7 @@
 /* terraform variables setting */
 
 domain                        = "xyz"
-location                      = "canadacentral"
+location                      = "northeurope"
 resource_group_name           = "aro-openshit-dev-cac-001-RG"
 resource_prefix               = "aro-openshit-dev-cac-001"
 virtual_network_address_space = ["10.0.0.0/22"]

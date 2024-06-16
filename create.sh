@@ -9,10 +9,10 @@ resourcePrefix="aro-openshit-dev-cac-001"
 aroDomain="xyz"
 #aroClusterServicePrincipalDisplayName="${resourcePrefix}-aro-sp-${RANDOM}"
 aroClusterServicePrincipalDisplayName="${resourcePrefix}-sp"
-pullSecret=$(cat /Users/alirezarahmani/Repo/aro-azapi-terraform/pull-secret.txt)
+pullSecret=$(cat C:/Users/Niels/Documents/Kadaster/aro-terra-gitactions-main/pull-secret.txt)
 # Name and location of the resource group for the Azure Red Hat OpenShift (ARO) cluster
 aroResourceGroupName="${resourcePrefix}-RG"
-location="canadacentral"
+location="northeurope"
 
 # Subscription id, subscription name, and tenant id of the current subscription
 subscriptionId=$(az account show --query id --output tsv)
@@ -51,16 +51,16 @@ fi
 echo "Creating service principal with [$aroClusterServicePrincipalDisplayName] display name in the [$tenantId] tenant..."
 az ad sp create-for-rbac --name $aroClusterServicePrincipalDisplayName > app-service-principal.json
 
-aroClusterServicePrincipalClientId=$(jq -r '.appId' app-service-principal.json)
-aroClusterServicePrincipalClientSecret=$(jq -r '.password' app-service-principal.json)
-aroClusterServicePrincipalObjectId=$(az ad sp show --id $aroClusterServicePrincipalClientId | jq -r '.id')
+aroClusterServicePrincipalClientId=$(grep -oP '"appId"\s*:\s*"\K[^"]+' app-service-principal.json)
+aroClusterServicePrincipalClientSecret=$(grep -oP '"password"\s*:\s*"\K[^"]+' app-service-principal.json)
+aroClusterServicePrincipalObjectId=$(az ad sp show --id $aroClusterServicePrincipalClientId | grep -oP '"id"\s*:\s*"\K[^"]+')
 
 # Assign the User Access Administrator role to the new service principal with resource group scope
 roleName='User Access Administrator'
 az role assignment create \
   --role "$roleName" \
+  --scope "subscriptions/$subscriptionId/resourceGroups/$aroResourceGroupName" \
   --assignee-object-id $aroClusterServicePrincipalObjectId \
-  --resource-group $aroResourceGroupName \
   --assignee-principal-type 'ServicePrincipal' >/dev/null
 
 if [[ $? == 0 ]]; then
@@ -75,7 +75,7 @@ roleName='Contributor'
 az role assignment create \
   --role "$roleName" \
   --assignee-object-id $aroClusterServicePrincipalObjectId \
-  --resource-group $aroResourceGroupName \
+  --scope "subscriptions/$subscriptionId/resourceGroups/$aroResourceGroupName" \
   --assignee-principal-type 'ServicePrincipal' >/dev/null
 
 if [[ $? == 0 ]]; then
