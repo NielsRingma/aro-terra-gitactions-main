@@ -11,7 +11,7 @@ terraform {
     }
   }
   cloud {
-    organization = "OpenShift"
+    organization = "Tixit-Dev"
 
     workspaces {
       name = "aro-terra-gitaction"
