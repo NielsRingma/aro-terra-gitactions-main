@@ -1,5 +1,3 @@
-
-# Why do you have to be public my friend?
 # Terraforming  Azure Red Hat OpenShift(ARO) with GitHub Actions
 
 ![Terraforming Aro](docs/assets/ARO-GitHubActions.png)
