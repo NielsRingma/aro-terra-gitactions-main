@@ -79,14 +79,14 @@ resource "azurerm_subnet" "worker_subnet" {
 resource "azurerm_role_assignment" "aro_cluster_service_principal_network_contributor" {
   scope                            = azurerm_virtual_network.virtual_network.id
   role_definition_name             = "Contributor"
-  principal_id                     = var.aro_cluster_aad_sp_client_id
+  principal_id                     = var.aro_cluster_aad_sp_object_id
   skip_service_principal_aad_check = true
 }
 
 resource "azurerm_role_assignment" "aro_resource_provider_service_principal_network_contributor" {
   scope                            = azurerm_virtual_network.virtual_network.id
   role_definition_name             = "Contributor"
-  principal_id                     = var.aro_cluster_aad_sp_client_id
+  principal_id                     = var.aro_rp_aad_sp_object_id
   skip_service_principal_aad_check = true
 }
 
